@@ -1,0 +1,27 @@
+{
+  "data": {
+    "data": [
+      {
+        "value": "correct1",
+        "dataPointId": "some_datapointid",
+        "takenAt": "2021-08-25T08:06:40.316Z",
+        "postedAt": "2021-08-25T08:06:40.316Z",
+        "configurationModelVersion": "0.1.0",
+        "modelVersion": "0.1.0"
+      },
+      {
+        "value": "correct2",
+        "dataPointId": "some_datapointid",
+        "takenAt": "2021-08-26T08:06:40.316Z",
+        "postedAt": "2021-08-26T08:06:40.316Z",
+        "configurationModelVersion": "0.1.0",
+        "modelVersion": "0.1.0"
+      }
+    ],
+    "clientid": "mock_client_id",
+    "line": "assembly",
+    "category": "analysis"
+  },
+  "recordId": "49615659390235360198692340333316747709505627667520552962000000",
+  "approximateArrivalTimestamp": 1613741931873
+}

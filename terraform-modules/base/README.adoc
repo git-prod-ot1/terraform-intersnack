@@ -1,0 +1,6 @@
+= Prerequisites
+
+They should be located in the `pre` directory in this module. These are some modules/steps that have to be done manually, because we don't have a good way of automating it yet.
+
+== lambda_provided
+It's a base module ported from lambda/provided from public ecr from AWS used for building custom runtime images. It is used in `lambda_docker` image to setup initial instance without tight coupling to the actual code.

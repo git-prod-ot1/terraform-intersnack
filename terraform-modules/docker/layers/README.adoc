@@ -1,0 +1,48 @@
+= Download Docker Image for Lambda Layers
+
+This guide will walk you through the process of downloading a Docker image that ensures AWS Lambda layers are built within the same environment they're used in. This is essential because some Python libraries rely on underlying C implementations that may differ across operating systems.
+
+== Prerequisites
+As for now, this image is available for users with AdministratorAccess (SSO)
+
+== Steps
+
+=== Step 1: Log in to AWS using SSO
+
+Log in to your AWS account using your standard SSO credentials.
+
+=== Step 2: Select the DEV Environment
+
+Next, select "Command line or programmatic access" from DEV environment to generate temporary credentials.
+
+IMPORTANT: Make sure to select the *DEV* environment.
+
+
+=== Step 3: Log in to Amazon ECR
+
+Now, log in to the Amazon Elastic Container Registry (ECR) by running the following command in your terminal. The xxx should be replaced with account ID of SharedServices account.
+
+[source,sh]
+----
+aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin xxx.dkr.ecr.eu-central-1.amazonaws.com
+----
+
+=== Step 4: Pull the Docker Image
+
+Finally, pull the Docker image using the following command:
+
+[source,sh]
+----
+docker pull xxx.dkr.ecr.eu-central-1.amazonaws.com/layer-builder:latest
+----
+
+That's it! You've successfully downloaded the Docker image for building Lambda layers within the same environment they're used in.
+
+== How to use:
+
+Run: `docker run -it --rm -v ~/.aws:/root/.aws -v $(pwd):/root/context xxx.dkr.ecr.eu-central-1.amazonaws.com/layer-builder:latest bash`
+in the root of your prject. It's important to include both main infra and local `terraform-modules`
+
+To be able to execute terraform scripts you need to be able to authorize either by profile configuration from `~/.aws/credentials` or passing ENV variables explicitly
+
+Then, go to layers directory and execute either `make apply-dev` or `make apply-prod`

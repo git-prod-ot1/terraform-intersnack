@@ -1,0 +1,97 @@
+<!-- BEGIN_TF_DOCS -->
+== Requirements
+
+No requirements.
+
+== Providers
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Version
+|[[provider_aws]] <<provider_aws,aws>> |n/a
+|[[provider_local]] <<provider_local,local>> |n/a
+|===
+
+== Modules
+
+No modules.
+
+== Resources
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Type
+
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_stream[aws_kinesis_stream.data] |resource
+
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm[aws_cloudwatch_metric_alarm.qoutas_almost_reached] |resource
+|===
+
+== Inputs
+
+[cols="a,a,a,a,a",options="header,autowidth"]
+
+|===
+|Name |Description |Type |Default |Required
+
+|[[input_aws_user_id]] <<input_aws_user_id,aws_user_id>>
+|AWS User id
+|`any`
+|n/a
+|yes
+
+|[[input_company_namespace]] <<input_company_namespace,company_namespace>>
+|Common prefix for company ex. plcf
+|`string`
+|n/a
+|yes
+
+|[[input_unit_name]] <<input_unit_name,unit_name>>
+|Describes the common name of the unit
+|`string`
+|n/a
+|yes
+
+|[[input_region]] <<input_region,region>>
+|AWS Region
+|`any`
+|`eu-central-1`
+|no
+
+|[[input_tags]] <<input_tags,tags>>
+|Tags
+|`any`
+|n/a
+|yes
+
+|[[input_shard_count]] <<input_shard_count,shard_count>>
+|Number of shards required for Kinesis Streams. Should be calculated based on number and size of messages/s
+|`number`
+|`1`
+|no
+
+|[[input_on_demand_mode]] <<input_on_demand_mode,on_demand_mode>>
+|[experimental] If set to true, enables on_demand mode for kinesis stream instead of default PROVISIONED
+|`bool`
+|`false`
+|no
+
+|[[input_sns_topic_arn]] <<input_sns_topic_arn,sns_topic_arn>>
+|SNS topic for alarming purposes
+|`string`
+|n/a
+|yes
+|===
+
+== Outputs
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Description
+
+|[[output_kinesis_widgets]] <<output_kinesis_widgets,kinesis_widgets>>
+|Definition of Kinesis Stream related widgets to be added to metrics dashboard
+
+|[[output_akinesis_data_stream]] <<output_kinesis_data_stream,kinesis_data_stream>>
+|A reference to created AWS Kinesis data stream
+|===
+<!-- END_TF_DOCS -->

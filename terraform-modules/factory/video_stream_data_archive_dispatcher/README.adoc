@@ -1,0 +1,130 @@
+Video Stream Data Archive - dispatcher
+
+== Description
+Module contains lambda dispatcher for video streams archiver along with
+sending video datapoint and required kinesis stream for ORC data transformation.
+
+== Requires VSDA activated in base module with:
+. dynamodb table - for video clips data to process
+. message queue - for processing video clip tasks
+
+== CloudWatch alarms:
+|===
+|Alarm |Description |Example name
+
+|<stage>_<company_namespace>_video_sqs_processing
+|Alarm on failed sqs messages put into DLQ
+|dev_plcf_video_sqs_processing
+
+|<stage>_<company_namespace>_<factory_name>_video_dispatcher_error
+|Alarm on errors on dispatcher lambda
+|dev_plcf_testtsarray_video_dispatcher_error
+
+|<stage>_<company_namespace>_<factory_name>_videostream_data_archive_dispatcher_execution
+|Alarm on dispatcher lambda not executed at least 2 times in 15 minute time frame
+|dev_plcf_testtsarray_videostream_data_archive_dispatcher_execution
+|===
+
+There is also option, if number of active videos is known and static, to have alarms on missing video streams.
+Each active stream then should follow naming convention:
+[source]
+----
+<stage>__<company_namespace>_<factory_short_name>_Stream_<index>
+----
+Where index is stream number from 01 to N.
+Example alarm would be:
+[source]
+----
+<stage>__<company_namespace>_<factory_short_name>_Stream_<index>_Down
+----
+
+== Lambda parameters:
+|===
+|Parameter |Description |Example value
+
+|BUCKET_NAME
+|Bucket for video clips
+|dev-plcf-video-feed
+
+|STAGE
+|Environment stage, typically dev or prod
+|dev
+
+|COMPANY_NAMESPACE
+|Common prefix for company
+|plcf
+
+|FACTORY
+|Factory short name - with company prefix used to filter factory streams (<STAGE>_<COMPANY_NAMESPACE>_<FACTORY>*)
+|ta
+
+|UNIT_NAME
+|Unit/factory name
+|testtsarray
+
+|FRAGMENTS_GAP_ALLOWED_MILLIS
+|When searching for clips if "break" between fragments will be smaller it will be treated as one continuous video  (milliseconds)
+|100
+
+|INDEX_STREAM_NAME
+|Kinesis stream to for transforming video datapoint to ORC and save to data lake
+|dev_plcf_testtsarray_video_index_process
+
+
+|VIDEO_MAX_LENGTH_IN_SECONDS
+|Maximum length of clips saved to s3 (seconds)
+|90
+
+|LAMBDA_TIMEOUT
+|If dispatcher lambda time left to process is smaller it will end (milliseconds)
+|15000
+
+|MAX_LIST_ATTEMPTS
+|Kinesis video list_fragments retry limit
+|5
+
+|QUEUE_URL
+|Video process task queue
+|https://sqs.eu-central-1.amazonaws.com/093961187306/dev-plcf-videostreams
+
+|DYNAMODB_TABLE
+|Table to save video clip data for processing
+|dev_plcf_videostreams
+
+|===
+
+== Dynamodb last processed timestamp
+|===
+|Attribute name |Definition |Example
+
+|PK
+|FACTORY#<FACTORY>
+|FACTORY#ta
+
+|SK
+|STREAM#<stream_name>
+|STREAM#dev_plcf_ta_stream_test1
+
+|current_timestamp
+|stream name and float time representation (python default)
+|{'stream_name': 'dev_plcf_ta_stream_test1', 'index': '1712069411.387'}
+
+|===
+
+== Dynamodb clip data
+|===
+|Attribute name |Definition |Example
+
+|PK
+|CLIP#<stream_name>>
+|CLIP#dev_plcf_ta_stream_test1
+
+|SK
+|START#<start_time>
+|START#2024.03.15-10:56:57.777
+
+|clip_data
+|Clip data to download and send to datalake
+|{"stream_name": "dev_plcf_ta_stream_test1", "time_range": {"__time_range__": true, "start": "2024-03-15T10:56:57.777000+00:00", "end": "2024-03-15T10:57:42.755000+00:00"}, "video_bucket_name": "dev-plcf-video-feed", "index_stream_name": "dev_plcf_testtsarray_video_index_process"}
+
+|===

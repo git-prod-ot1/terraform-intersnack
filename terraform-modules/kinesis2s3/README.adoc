@@ -1,0 +1,302 @@
+<!-- BEGIN_TF_DOCS -->
+== Requirements
+
+No requirements.
+
+== Providers
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Version
+
+|[[provider_aws]] <<provider_aws,aws>> |n/a
+|===
+
+== Modules
+
+[cols="a,a,a",options="header,autowidth"]
+|===
+|Name |Source |Version
+
+|[[module_kinesis-stream]] <<module_kinesis-stream,kinesis-stream>> |`../kinesis-stream` |
+
+|[[module_message_transform]] <<module_message_transform,message_transform>> |`./message_transform` |
+
+|[[module_measurement_samplesdata_glue_table]] <<module_measurement_samplesdata_glue_table,measurement_samplesdata_glue_table>> |`../glue/table` |
+
+|[[module_measurement_samples]] <<module_measurement_samples,measurement_samples>> |`../s3` |
+
+|[[module_lambda]] <<module_lambda,this>> |`../../lambda` |
+|===
+
+//Resources must be reviewed and updated
+== Resources
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Type
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_dashboard[aws_cloudwatch_dashboard.metrics_dashboard] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group[aws_cloudwatch_log_group.firehose_delivery_stream] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_stream[aws_cloudwatch_log_stream.firehose_delivery_stream_s3] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm[aws_cloudwatch_metric_alarm.qoutas_almost_reached] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_catalog_table[aws_glue_catalog_table.measurement_samplesdata] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/glue_crawler[aws_glue_crawler.measurement_samples] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role[aws_iam_role.firehose] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role[aws_iam_role.glue] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.AWSGlueServiceRole] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.AWSLambdaFullAccess] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.AmazonKinesisFullAccess] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.AmazonS3FullAccess] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.glue_service_role] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.s3_for_glue] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream[aws_kinesis_firehose_delivery_stream.data] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_stream[aws_kinesis_stream.data] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket[aws_s3_bucket.measurement_samples] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block[aws_s3_bucket_public_access_block.measurement_samples] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic[aws_sns_topic.this] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription[aws_sns_topic_subscription.this] |resource
+|===
+
+== Inputs
+
+[cols="a,a,a,a,a",options="header,autowidth"]
+
+|===
+|Name |Description |Type |Default |Required
+
+|[[input_aws_user_id]] <<input_aws_user_id,aws_user_id>>
+|AWS User id
+|`any`
+|n/a
+|yes
+
+|[[input_company_namespace]] <<input_company_namespace,company_namespace>>
+|Common prefix for company ex. plcf
+|`string`
+|n/a
+|yes
+
+|[[input_unit_name]] <<input_unit_name,unit_name>>
+|Describes the common name of the unit
+|`string`
+|n/a
+|yes
+
+|[[input_region]] <<input_region,region>>
+|AWS Region
+|`any`
+|`eu-central-1`
+|no
+
+|[[input_tags]] <<input_tags,tags>>
+|Tags
+|`any`
+|n/a
+|yes
+
+|[[input_factory_partition_override]] <<input_factory_partition_override,factory_partition_override>>
+|Override for prefix in S3, defaults to unit_name
+|`string`
+|`null`
+|no
+
+|[[input_sns_topic_override]] <<input_sns_topic_override,sns_topic_override>>
+|If provided, overrides the creation of a dedicated topic inside the module
+|`any`
+|`null`
+|no
+
+|[[input_sns_alarms_recipients]] <<input_sns_alarms_recipients,sns_alarms_recipients>>
+|List of emails, that should be notified on events
+|`list(string)`
+|`[]`
+|no
+
+|[[input_create_dashboard]] <<input_create_dashboard,create_dashboard>>
+|Controls whether a dashboard for a module should be created, is usually propagated from higher module
+|`bool`
+|`true`
+|no
+
+|[[input_shard_count]] <<input_shard_count,shard_count>>
+|Number of shards required for Kinesis Streams. Should be calculated based on number and size of messages/s
+|`number`
+|`1`
+|no
+
+|[[input_transformation_lambda]] <<input_transformation_lambda,transformation_lambda>>
+|Lambda resource used for transforming incoming data in Kinesis Firehose
+|`any`
+|n/a
+|yes
+
+|[[input_measurement_samples_bucket]] <<input_measurement_samples_bucket,measurement_samples_bucket>>
+|If provided, overrides the creation of dedicated bucket for measurement samples
+|`any`
+|`null`
+|no
+
+|[[input_measurement_samples_glue_catalog_database]] <<input_measurement_samples_glue_catalog_database,measurement_samples_glue_catalog_database>>
+|Glue Catalog Database for measurement samples table
+|`any`
+|n/a
+|yes
+
+|[[input_measurement_samples_glue_table]] <<input_measurement_samples_glue_table,measurement_samples_glue_table>>
+|If provided, overrides the creation of dedicated glue table
+|`any`
+|`null`
+|no
+
+|[[input_glue_schema_columns]] <<input_glue_schema_columns,glue_schema_columns>>
+|Configuration of default columns for Glue table
+|
+[source]
+----
+list(object({
+    name = string,
+    type = string
+  }))
+----
+|
+[source]
+----
+[
+  {
+    "name": "datapointid",
+    "type": "string"
+  },
+  {
+    "name": "value",
+    "type": "string"
+  },
+  {
+    "name": "takenat",
+    "type": "timestamp"
+  },
+  {
+    "name": "takenatend",
+    "type": "timestamp"
+  },
+  {
+    "name": "postedat",
+    "type": "timestamp"
+  },
+  {
+    "name": "receivedat",
+    "type": "timestamp"
+  },
+  {
+    "name": "hour",
+    "type": "string"
+  },
+  {
+    "name": "invocationid",
+    "type": "string"
+  }
+]
+----
+|no
+
+|[[input_glue_schema_extension_columns]] <<input_glue_schema_extension_columns,glue_schema_extension_columns>>
+|n/a
+|
+[source]
+----
+list(object({
+    name = string,
+    type = string
+  }))
+----
+|`[]`
+|no
+
+|[[input_firehose_source]] <<input_firehose_source,firehose_source>>
+|Allowed values: KINESIS, DIRECT_PUT. Defines the firehose source configuration. For KINESIS: kinesis_source_configuration, for DIRECT_PUT: no source configuration block.
+|`string`
+|`KINESIS`
+|no
+
+|[[input_on_demand_mode]] <<input_on_demand_mode,on_demand_mode>>
+|[experimental] If set to true, enables on_demand mode for kinesis stream instead of default PROVISIONED
+|`bool`
+|`false`
+|no
+
+|[[input_enable_takenat_partitioning]] <<input_enable_takenat_partitioning,enable_takenat_partitioning>>
+|[experimental] If set to true, uses dynamic partitioning based on takenAt from transformation lambda. Takes precedence over dynamic_partitioning_prefix variable
+|`bool`
+|`false`
+|no
+
+|[[input_dynamic_partitioning_prefix]] <<input_dynamic_partitioning_prefix,dynamic_partitioning_prefix>>
+|[experimental] If provided enables dynamic partitioning for Kinesis Firehose Stream
+|`any`
+|`null`
+|no
+
+|[[input_glue_crawler_cron]] <<input_glue_crawler_cron,glue_crawler_cron>>
+|Cron expression for scheduled Glue Crawler run. Defaults to cron(1 0 * * ? *). Default variable value not provided due to embedded modules behaviour (value is propagated from higher modules)
+|`any`
+|`null`
+|no
+
+|[[input_glue_partitions_updater]] <<input_glue_partitions_updater,glue_partitions_updater>>
+|Allowed values: GLUE_CRAWLER,LAMBDA. For GLUE_CRAWLER: cron for generated crawler is set, for LAMBDA, lambda that runs each hour is created
+|`string`
+|`GLUE_CRAWLER`
+|no
+
+|[[input_glue_table_name_override]] <<input_glue_table_name_override,glue_table_name_override>>
+|If provided, overrides name of created table name.
+|`string`
+|`null`
+|no
+
+|[[input_bucket_name_override]] <<input_bucket_name_override,bucket_name_override>>
+|If provided, overrides name of created s3 bucket.
+|`string`
+|`null`
+|no
+
+|[[input_custom_s3_location]] <<input_custom_s3_location,custom_s3_location>>
+|If provided, overrides default s3_location
+|`string`
+|`null`
+|no
+
+|[[input_partition_keys]] <<input_partition_keys,partition_keys>>
+|A list of partition keys
+|`any`
+|`null`
+|no
+
+|[[input_partitioning_lambda_version]] <<input_partitioning_lambda_version,partitioning_lambda_version>>
+|n/a
+|`number`
+|`2`
+|no
+
+|[[glue_partitions_from_iot_rule_sql]] <<glue_partitions_from_iot_rule_sql,glue_partitions_from_iot_rule_sql>>
+|Comma separated list of glue partitions from iot rule sql
+|`string`
+|`null`
+|no
+|===
+
+== Outputs
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Description
+
+|[[output_measurement_samples_bucket]] <<output_measurement_samples_bucket,measurement_samples_bucket>> |n/a
+|[[output_kinesis_data_stream]] <<output_kinesis_data_stream,kinesis_data_stream>> |n/a
+|[[output_firehose_stream]] <<output_firehose_stream,firehose_stream>> |n/a
+|[[output_aws_iam_role_firehose]] <<output_aws_iam_role_firehose,aws_iam_role_firehose>> |n/a
+|[[output_dashboard_body]] <<output_dashboard_body,dashboard_body>> |n/a
+|[[output_glue_table_name]] <<output_glue_table_name,glue_table_name>> |n/a
+|[[output_measurement_samples_glue_table]] <<output_measurement_samples_glue_table,measurement_samples_glue_table>> |n/a
+|[[output_transformation_lambda]] <<output_transformation_lambda,transformation_lambda>> |n/a
+|===
+<!-- END_TF_DOCS -->

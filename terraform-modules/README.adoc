@@ -1,0 +1,154 @@
+= Developers Guide
+:toc:
+
+== Prerequisites
+Before using those modules make sure following prerequisites are fulfilled:
+
+. Docker minimal for lambda-docker is created in the
+
+
+
+== Prepare main files
+To run those modules configure your files in root:
+
+variables.tf:
+
+[source, hcl-terraform]
+----
+variable "region" {
+  description = "AWS Region Name"
+  default = "eu-central-1"
+}
+
+variable "tags" {
+  description = "Tags"
+  type = map(map(string))
+}
+
+variable "aws_user_id" {}
+
+variable "company_namespace" {}
+----
+
+terraform.tfvars:
+
+[source, hcl-terraform]
+----
+tags = {
+  "default" = {
+    "CreatedBy" = "terraform",
+    "UserId" = "{here put aws_user_id}:terraform",
+  }
+}
+
+aws_user_id = "{here put aws_user_id}"
+
+company_namespace = "{your company namespace: for example plcf}"
+----
+
+outputs.tf
+
+[source, hcl-terraform]
+----
+output "iot_endpoint_address" {
+  value = module.base.iot_endpoint_address
+}
+----
+
+providers.tf: (only possible example)
+
+[source, hcl-terraform]
+----
+provider "aws" {
+  region                  = var.region
+  shared_credentials_file = "~/.aws/credentials"
+  profile                 = "${var.company_namespace}-${terraform.workspace}"
+  version                 = "~> 3.0"
+}
+
+terraform {
+  backend "s3" {
+    bucket = "{bucket for terraform state - create manually in S3}"
+    region = "eu-central-1"
+    profile = "{optional profile from .aws configuration}"
+    key = "terraform/terraform.tfstate"
+  }
+}
+
+----
+
+In order to use above example create configurations and credential files in your .aws directory ($HOME/.aws).
+
+Example main.tf file:
+
+[source, hcl-terraform]
+----
+module "base" {
+  source = "./terraform-modules/base"
+  company_namespace = var.company_namespace
+  aws_user_id = var.aws_user_id
+  region = var.region
+  tags = local.tags
+
+  //CONFIGURE!
+  factories = [module.glinojeck]
+}
+
+
+module "glinojeck" {
+  //  FIXED
+  source = "./terraform-modules/factory"
+  base = module.base.base_outputs
+
+  //  CONFIGURE
+  factory_name = "glinojeck"
+  factory_short = "gl"
+}
+
+----
+
+== First run
+When modules are used you firt you have to run
+
+[source]
+----
+terraform init
+----
+
+and after that create your first workspace:
+
+[source]
+----
+terraform workspace new dev
+----
+
+At this point, you can run:
+
+[source]
+----
+terraform apply
+----
+
+== Manual resources
+
+=== IoT Core Billing Group
+Not all resources are currently supported by terraform (or CloudFormation for that matter).
+One of them is BillingGroup for IoT Core which is extremely useful for monitoring costs in IoT.
+To create Billing Group go to IoT Core page of AWS, section `Manage` -> `Billing Groups` and create a new Billing Group.
+It is recommended to use a format of {env}_{companyNamespace}_{factory}_BillingGroup, for example:
+`dev_plcf_glinojeck_BillingGroup`. Remember to attach tags to it:
+
+Example:
+[source]
+----
+environment         dev
+company             plcf
+factory             glinojeck
+----
+
+Next, you have to attach existing things to your group.
+
+== Create documentation for modules
+. Install terraform-docs from https://github.com/terraform-docs/terraform-docs
+. Go to module directory
+. Run `terraform-docs asciidoc --output-file README.adoc ./`

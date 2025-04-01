@@ -1,0 +1,15 @@
+{
+  "defaultTopic": "testtopic/iot/republished/${datapointid}",
+  "republish_all": false,
+  "abc": {
+    "republish": true,
+    "topic": "testtopic/iot/republished/temperature/${datapointid}"
+  },
+  "xyz": {
+    "republish": false,
+    "transformation": {
+      "datapoinid": "${additionaldata}_new",
+      "additionaldata": "${datapoinid}_new"
+    }
+  }
+}

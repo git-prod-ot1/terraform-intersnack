@@ -1,0 +1,15 @@
+New feature to have glue partitions from iot sql rule.
+
+Example configuration:
+
+iot_rule_sql                      = "SELECT * as data, clientid() AS clientid, topic(2) as category, topic(3) as line FROM '${terraform.workspace}_${var.company_namespace}_${each.value}_data/+/+'"
+Has 'category' and 'line' data added in sql tule
+
+Configuring message transform v2 lambda with:
+glue_partitions_from_iot_rule_sql = "category,line"
+
+And dynamic partitioning with:
+dynamic_partitioning_prefix       = "data/factory=catlin1/category=!{partitionKeyFromLambda:category}/line=!{partitionKeyFromLambda:line}/year=!{partitionKeyFromLambda:year}/month=!{partitionKeyFromLambda:month}/day=!{partitionKeyFromLambda:day}/"
+enable_takenat_partitioning       = false
+
+Data will be indexed in s3 bucket with data/factory=catlin1/category=topic(2)/line=topic(3)/... data prefix

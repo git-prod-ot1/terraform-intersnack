@@ -1,0 +1,270 @@
+<!-- BEGIN_TF_DOCS -->
+== Requirements
+
+No requirements.
+
+== Providers
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Version
+|[[provider_aws]] <<provider_aws,aws>> |n/a
+|[[provider_local]] <<provider_local,local>> |n/a
+|===
+
+== Modules
+
+[cols="a,a,a",options="header,autowidth"]
+|===
+|Name |Source |Version
+|[[module_kinesis2s3]] <<module_kinesis2s3,kinesis2s3>> |../kinesis2s3 |
+|===
+
+== Resources
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Type
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_dashboard[aws_cloudwatch_dashboard.metrics_dashboard] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm[aws_cloudwatch_metric_alarm.client_no_data] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy[aws_iam_policy.iot_put_object_s3] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role[aws_iam_role.iot_role] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.AWSIoTLogging_iot] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.AWSIoTRuleActions_iot] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.AWSIoTThingsRegistration_iot] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.AmazonKinesisFullAccess_iot] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.iot_rule_allow_s3] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_certificate[aws_iot_certificate.this] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_policy[aws_iot_policy.clients] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_policy[aws_iot_policy.permissions] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_policy_attachment[aws_iot_policy_attachment.clients] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_policy_attachment[aws_iot_policy_attachment.custom_certificate_clients] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_policy_attachment[aws_iot_policy_attachment.custom_certificate_permissions] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_policy_attachment[aws_iot_policy_attachment.permissions] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_thing[aws_iot_thing.this] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_thing_principal_attachment[aws_iot_thing_principal_attachment.this] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_thing_type[aws_iot_thing_type.this] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_topic_rule[aws_iot_topic_rule.this] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret[aws_secretsmanager_secret.cert] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret[aws_secretsmanager_secret.private_key] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version[aws_secretsmanager_secret_version.cert] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version[aws_secretsmanager_secret_version.private_key] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic[aws_sns_topic.this] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription[aws_sns_topic_subscription.this] |resource
+|https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file[local_file.certificate_file] |resource
+|https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file[local_file.config] |resource
+|https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file[local_file.private_key_file] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iot_endpoint[aws_iot_endpoint.default] |data source
+|===
+
+== Inputs
+
+[cols="a,a,a,a,a",options="header,autowidth"]
+|===
+|Name |Description |Type |Default |Required
+|[[input_aws_iot_thing_type]] <<input_aws_iot_thing_type,aws_iot_thing_type>>
+|If provided, overrides the creation of dedicated thing type
+|`any`
+|`null`
+|no
+
+|[[input_aws_user_id]] <<input_aws_user_id,aws_user_id>>
+|AWS User id
+|`any`
+|n/a
+|yes
+
+|[[input_cloudwatch_alarms_evaluation_period]] <<input_cloudwatch_alarms_evaluation_period,cloudwatch_alarms_evaluation_period>>
+|Overrides the default evaluation period of 900 seconds
+|`number`
+|`null`
+|no
+
+|[[input_company_namespace]] <<input_company_namespace,company_namespace>>
+|Common prefix for company ex. plcf
+|`string`
+|n/a
+|yes
+
+|[[input_create_dashboard]] <<input_create_dashboard,create_dashboard>>
+|Controls whether a dashboard for a module should be created, is usually propagated from higher module
+|`bool`
+|`true`
+|no
+
+|[[input_factory_partition_override]] <<input_factory_partition_override,factory_partition_override>>
+|Override for prefix in S3, defaults to unit_name
+|`string`
+|`null`
+|no
+
+|[[input_glue_crawler_cron]] <<input_glue_crawler_cron,glue_crawler_cron>>
+|Cron expression for scheduled Glue Crawler run. Defaults to cron(1 0 * * ? *). Default variable value not provided due to embedded modules behaviour (value is propagated from higher modules)
+|`string`
+|`null`
+|no
+
+|[[input_glue_schema_columns]] <<input_glue_schema_columns,glue_schema_columns>>
+|Configuration of default columns for Glue table
+|
+
+[source]
+----
+list(object({
+    name = string,
+    type = string
+  }))
+----
+
+|
+
+[source]
+----
+[
+  {
+    "name": "datapointid",
+    "type": "string"
+  },
+  {
+    "name": "value",
+    "type": "string"
+  },
+  {
+    "name": "takenat",
+    "type": "timestamp"
+  },
+  {
+    "name": "takenatend",
+    "type": "timestamp"
+  },
+  {
+    "name": "postedat",
+    "type": "timestamp"
+  },
+  {
+    "name": "receivedat",
+    "type": "timestamp"
+  },
+  {
+    "name": "hour",
+    "type": "string"
+  },
+  {
+    "name": "invocationid",
+    "type": "string"
+  }
+]
+----
+
+|no
+
+|[[input_glue_schema_extension_columns]] <<input_glue_schema_extension_columns,glue_schema_extension_columns>>
+|List of columns for Glue table that extend glue_schema_columns
+|
+
+[source]
+----
+list(object({
+    name = string,
+    type = string
+  }))
+----
+
+|`[]`
+|no
+
+|[[input_iot_certificate]] <<input_iot_certificate,iot_certificate>>
+|Additional certificate to be applied to created policies
+|`any`
+|`null`
+|no
+
+|[[input_measurement_samples_bucket]] <<input_measurement_samples_bucket,measurement_samples_bucket>>
+|If provided, overrides the creation of dedicated bucket for measurement samples
+|`any`
+|`null`
+|no
+
+|[[input_measurement_samples_glue_catalog_database]] <<input_measurement_samples_glue_catalog_database,measurement_samples_glue_catalog_database>>
+|Glue Catalog Database for measurement samples table
+|`any`
+|n/a
+|yes
+
+|[[input_measurement_samples_glue_table]] <<input_measurement_samples_glue_table,measurement_samples_glue_table>>
+|If provided, overrides the creation of dedicated glue table
+|`any`
+|`null`
+|no
+
+|[[input_no_of_things]] <<input_no_of_things,no_of_things>>
+|Number of things to create
+|`number`
+|`1`
+|no
+
+|[[input_region]] <<input_region,region>>
+|AWS Region
+|`string`
+|`"eu-central-1"`
+|no
+
+|[[input_shard_count]] <<input_shard_count,shard_count>>
+|Number of shards required for Kinesis Streams. Should be calculated based on number and size of messages/s
+|`number`
+|`1`
+|no
+
+|[[input_sns_alarms_recipients]] <<input_sns_alarms_recipients,sns_alarms_recipients>>
+|List of emails, that should be notified on events
+|`list(string)`
+|`[]`
+|no
+
+|[[input_sns_topic_override]] <<input_sns_topic_override,sns_topic_override>>
+|If provided, overrides the creation of a dedicated topic inside the module
+|`any`
+|`null`
+|no
+
+|[[input_tags]] <<input_tags,tags>>
+|Tags
+|`map(map(string))`
+|n/a
+|yes
+
+|[[input_transformation_lambda]] <<input_transformation_lambda,transformation_lambda>>
+|Lambda resource used for transforming incoming data in Kinesis Firehose
+|`any`
+|n/a
+|yes
+
+|[[input_unit_name]] <<input_unit_name,unit_name>>
+|Describes the common name of the unit
+|`string`
+|n/a
+|yes
+
+|[[glue_partitions_from_iot_rule_sql]] <<glue_partitions_from_iot_rule_sql,glue_partitions_from_iot_rule_sql>>
+|Comma separated list of glue partitions from iot rule sql
+|`string`
+|`null`
+|no
+
+|===
+
+== Outputs
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Description
+|[[output_aws_iam_role_firehose]] <<output_aws_iam_role_firehose,aws_iam_role_firehose>> |n/a
+|[[output_aws_iot_certificate]] <<output_aws_iot_certificate,aws_iot_certificate>> |n/a
+|[[output_aws_iot_data_topic]] <<output_aws_iot_data_topic,aws_iot_data_topic>> |n/a
+|[[output_aws_iot_thing]] <<output_aws_iot_thing,aws_iot_thing>> |n/a
+|[[output_aws_iot_topic_rule]] <<output_aws_iot_topic_rule,aws_iot_topic_rule>> |n/a
+|[[output_dashboard_body]] <<output_dashboard_body,dashboard_body>> |n/a
+|[[output_kinesis_data_stream]] <<output_kinesis_data_stream,kinesis_data_stream>> |n/a
+|[[output_measurement_samples_bucket]] <<output_measurement_samples_bucket,measurement_samples_bucket>> |n/a
+|===
+<!-- END_TF_DOCS -->

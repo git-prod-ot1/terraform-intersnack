@@ -1,0 +1,120 @@
+A temporary implementation based on farmer app
+
+== general data restore procedure:
+
+. create current db snapshot (snapshots can be shared across accounts, select snapshot and share by account id)
+. recreate db from desired snapshot
+. set on new db instance: port, password and possible other params from old db
+. replace instance address in app OR replace instances names
+. check
+. update terraform
+
+== data migration procedure:
+
+. setup rds cert and tools
+. create current db snapshot
+. recreate db from desired snapshot
+. connect to new db, make export
+. connect to old db, drop database, wait for it to not listing deleted db, create new db of that name
+. import data to database
+
+. check
+. update terraform
+
+== password set after rds redeployment
+
+After deletion and recreation of datatabase it will have new
+master password although secret manager stored password remains unchanged.
+If the same password is needed - reapply previous one, or apply and store
+new one.
+
+== installing rds cert
+(https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html)
+
+    wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
+
+
+	sudo cp rds-combined-ca-bundle.pem /etc/pki/ca-trust/source/anchors/
+	sudo update-ca-trust'
+
+or
+
+	sudo cp rds-combined-ca-bundle.pem /usr/local/share/ca-certificates/rds-combined-ca-bundle.crt
+	sudo update-ca-certificates
+
+
+== sqlcmd
+
+    sqlcmd -S <server_name>,<port> -U <username> -P <password> -C -Q "SELECT 1"
+
+    sqlcmd -S <server_name>,<port> -U sqladmin -C -P <password> -d master -Q "SELECT name FROM sys.databases;"
+    sqlcmd -S <server_name>,<port> -U sqladmin -C -P <password> -d master -Q "drop database <dbname>;"
+
+    sqlcmd -S <server_name>,<port> -U sqladmin -C -P <password> -d <dbname> -Q "SET NOCOUNT ON; SELECT name FROM sys.tables;"
+
+(-C ignores ssl validation)
+
+=== sqlpackage export
+
+    sqlpackage /Action:Export \
+    /SourceServerName:<server_name>,<port> \
+    /SourceDatabaseName:<dbname> \
+    /TargetFile:<filename> \
+    /SourceUser:sqladmin \
+    /SourcePassword:<password>
+
+    sqlpackage /Action:Export \
+    /SourceServerName:<server_name>,<port> \
+    /SourceDatabaseName:<dbname> \
+    /TargetFile:<filename> \
+    /SourceUser:sqladmin \
+    /SourcePassword:<password>
+    /p:VerifyFullTextDocumentTypesSupported=false \
+    /p:IgnoreDataspacePartitionSchemes=true
+
+    some ssl/cert settings
+    Connect without encryption: /SourceEncryptConnection:False or /TargetEncryptConnection:False
+    Trust server certificate: /SourceTrustServerCertificate:True or /TargetTrustServerCertificate:True
+    /TargetTrustServerCertificate:True /SourceFile:"C:\Temp\testbackup.bacpac" /p:CommandTimeout=6200
+
+== sqlpackage import
+
+    sqlpackage /Action:Import \
+    /TargetServerName:<server_name>,<port> \
+    /TargetDatabaseName:<dbname> \
+    /SourceFile:<filename> \
+    /TargetUser:sqladmin \
+    /TargetPassword:<password>
+
+== installing sqlpackage
+https://learn.microsoft.com/en-us/sql/tools/sqlpackage/sqlpackage-download?view=sql-server-ver16
+
+== installing sqlcmd
+https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-setup-tools?view=sql-server-ver16&tabs=redhat-install
+
+== creating readonly user sqlreaderXXX:
+
+    log in to db as admin
+
+dev:
+
+    create login sqlreaderXXX with password = 'PASS123!@#', CHECK_POLICY = ON, CHECK_EXPIRATION = OFF;
+
+prod:
+
+    create login sqlreaderXXX with password = 'PASS123!@#', CHECK_POLICY = ON, CHECK_EXPIRATION = ON;
+
+    USE <DB_NAME>;
+
+    create user sqlreaderXXX for login sqlreaderXXX;
+
+    exec sp_addrolemember 'db_datareader', 'sqlreaderXXX';
+
+    alter login sqlreaderXXX with DEFAULT_DATABASE = <DB_NAME>;
+
+== reset password for sqlreaderXXX user:
+
+    ALTER LOGIN sqlreaderXXX WITH PASSWORD = 'PASS123!@#' MUST_CHANGE;
+
+MUST_CHANGE will require user to change it during first login thus
+it needs an interactive SQL client with option to do so.

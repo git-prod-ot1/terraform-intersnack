@@ -1,0 +1,6 @@
+Tests in this module are performed based on input and output behaviour.
+Specific use-cases are a real life scenarios.
+
+. multiple_records_factory_partition.json
++
+This one is an example of encoded event where first record is significantly different from the second. It was discovered during beetloaders testing and it covers a case where one of the records has a specific data for partitioning whereas the other one misses it. In this case it's factoryid. It might be that the MQTT topic supports more than a dedicated flow and extra field may appear.

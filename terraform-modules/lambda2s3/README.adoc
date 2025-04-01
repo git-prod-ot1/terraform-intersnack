@@ -1,0 +1,202 @@
+<!-- BEGIN_TF_DOCS -->
+== Requirements
+
+No requirements.
+
+== Providers
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Version
+|[[provider_aws]] <<provider_aws,aws>> |n/a
+|===
+
+== Modules
+
+[cols="a,a,a",options="header,autowidth"]
+|===
+|Name |Source |Version
+|[[module_kinesis2s3]] <<module_kinesis2s3,kinesis2s3>> |../kinesis2s3 |
+|===
+
+== Resources
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Type
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_rule[aws_cloudwatch_event_rule.lambda_trigger] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target[aws_cloudwatch_event_target.lambda_trigger_target] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy[aws_iam_policy.index_s3_lambda] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy[aws_iam_policy.kinesis_put_record_lambda] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy[aws_iam_policy.secret_lambda] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role[aws_iam_role.input_lambda] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.AWSKinesisPutRecordAccess] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.cloudwatch_for_lambda] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.kinesis_put_record_lambda] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.read_secret] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission[aws_lambda_permission.allow_lambda_trigger] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket[aws_s3_bucket.index] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block[aws_s3_bucket_public_access_block.index] |resource
+|===
+
+== Inputs
+
+[cols="a,a,a,a,a",options="header,autowidth"]
+|===
+|Name |Description |Type |Default |Required
+|[[input_aws_user_id]] <<input_aws_user_id,aws_user_id>>
+|AWS User id
+|`any`
+|n/a
+|yes
+
+
+
+|[[input_company_namespace]] <<input_company_namespace,company_namespace>>
+|Common prefix for company ex. plcf
+|`string`
+|n/a
+|yes
+
+|[[input_create_index_bucket]] <<input_create_index_bucket,create_index_bucket>>
+|Controls whether Index bucket should be created (last operation timestamp)
+|`bool`
+|`false`
+|no
+
+|[[input_firehose_source]] <<input_firehose_source,firehose_source>>
+|Allowed values: KINESIS, DIRECT_PUT. Defines the firehose source configuration. For KINESIS: kinesis_source_configuration, for DIRECT_PUT: no source configuration block.
+|`string`
+|`KINESIS`
+|no
+
+|[[input_glue_schema_columns]] <<input_glue_schema_columns,glue_schema_columns>>
+|Configuration of default columns for Glue table
+|
+
+[source]
+----
+list(object({
+    name = string,
+    type = string
+  }))
+----
+
+|
+
+[source]
+----
+[
+  {
+    "name": "datapointid",
+    "type": "string"
+  },
+  {
+    "name": "value",
+    "type": "string"
+  },
+  {
+    "name": "takenat",
+    "type": "timestamp"
+  },
+  {
+    "name": "takenatend",
+    "type": "timestamp"
+  },
+  {
+    "name": "postedat",
+    "type": "timestamp"
+  },
+  {
+    "name": "receivedat",
+    "type": "timestamp"
+  },
+  {
+    "name": "hour",
+    "type": "string"
+  },
+  {
+    "name": "invocationid",
+    "type": "string"
+  }
+]
+----
+
+|no
+
+|[[input_glue_schema_extension_columns]] <<input_glue_schema_extension_columns,glue_schema_extension_columns>>
+|List of columns for Glue table that extend glue_schema_columns
+|
+
+[source]
+----
+list(object({
+    name = string,
+    type = string
+  }))
+----
+
+|`[]`
+|no
+
+|[[input_input_lambda]] <<input_input_lambda,input_lambda>>
+|Lambda resource for providing incoming data
+|`any`
+|n/a
+|yes
+
+|[[input_measurement_samples_bucket]] <<input_measurement_samples_bucket,measurement_samples_bucket>>
+|If provided, overrides the creation of dedicated bucket for measurement samples
+|`any`
+|`null`
+|no
+
+|[[input_measurement_samples_glue_catalog_database]] <<input_measurement_samples_glue_catalog_database,measurement_samples_glue_catalog_database>>
+|Glue Catalog Database for measurement samples table
+|`any`
+|n/a
+|yes
+
+|[[input_region]] <<input_region,region>>
+|AWS Region
+|`string`
+|`"eu-central-1"`
+|no
+
+|[[input_schedule_expression]] <<input_schedule_expression,schedule_expression>>
+|Lambda resource cron schedule expression
+|`string`
+|n/a
+|yes
+
+|[[input_tags]] <<input_tags,tags>>
+|Tags
+|`map(map(string))`
+|n/a
+|yes
+
+|[[input_transformation_lambda]] <<input_transformation_lambda,transformation_lambda>>
+|Lambda resource used for transforming incoming data in Kinesis Firehose
+|`any`
+|n/a
+|yes
+
+|[[input_unit_name]] <<input_unit_name,unit_name>>
+|Describes the common name of the unit
+|`string`
+|n/a
+|yes
+
+|===
+
+== Outputs
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Description
+|[[output_aws_iam_role_input_lambda]] <<output_aws_iam_role_input_lambda,aws_iam_role_input_lambda>> |n/a
+|[[output_aws_kinesis_stream_data]] <<output_aws_kinesis_stream_data,aws_kinesis_stream_data>> |n/a
+|[[output_firehose_stream]] <<output_firehose_stream,firehose_stream>> |n/a
+|[[output_aws_s3_bucket_index]] <<output_aws_s3_bucket_index,aws_s3_bucket_index>> |n/a
+|===
+<!-- END_TF_DOCS -->

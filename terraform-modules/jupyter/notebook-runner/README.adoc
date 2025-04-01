@@ -1,0 +1,153 @@
+<!-- BEGIN_TF_DOCS -->
+== Requirements
+
+No requirements.
+
+== Providers
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Version
+|[[provider_aws]] <<provider_aws,aws>> |n/a
+|===
+
+== Modules
+
+No modules.
+
+== Resources
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Type
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_rule[aws_cloudwatch_event_rule.this] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target[aws_cloudwatch_event_target.this] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function[aws_lambda_function.this] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission[aws_lambda_permission.this] |resource
+|===
+
+== Inputs
+
+[cols="a,a,a,a,a",options="header,autowidth"]
+|===
+|Name |Description |Type |Default |Required
+|[[input_additional_env_vars]] <<input_additional_env_vars,additional_env_vars>>
+|Additional env variables passed to lambda triggering report run
+|`object({})`
+|`{}`
+|no
+
+|[[input_aws_user_id]] <<input_aws_user_id,aws_user_id>>
+|n/a
+|`any`
+|n/a
+|yes
+
+|[[input_company_namespace]] <<input_company_namespace,company_namespace>>
+|n/a
+|`string`
+|n/a
+|yes
+
+|[[input_ecs_cluster]] <<input_ecs_cluster,ecs_cluster>>
+|Resource of type aws_ecs_cluster (usually created in base report module)
+|`any`
+|n/a
+|yes
+
+|[[input_ecs_task_definition]] <<input_ecs_task_definition,ecs_task_definition>>
+|Resource of type aws_ecs_task_definition (usually created in base report module)
+|`any`
+|n/a
+|yes
+
+|[[input_ecs_task_security_group]] <<input_ecs_task_security_group,ecs_task_security_group>>
+|Resource of type aws_security_group (usually created in base report module)
+|`any`
+|n/a
+|yes
+
+|[[input_iam_lambda_role]] <<input_iam_lambda_role,iam_lambda_role>>
+|Resource of type aws_iam_role for lambda triggering the ECS task
+|`any`
+|n/a
+|yes
+
+|[[input_notebook_name]] <<input_notebook_name,notebook_name>>
+|Name of the notebook to be executed
+|`string`
+|n/a
+|yes
+
+|[[input_region]] <<input_region,region>>
+|n/a
+|`string`
+|`"eu-central-1"`
+|no
+
+|[[input_report_name]] <<input_report_name,report_name>>
+|Name of the report
+|`string`
+|n/a
+|yes
+
+|[[input_report_trigger_cron]] <<input_report_trigger_cron,report_trigger_cron>>
+|CRON expression for triggering report processing
+|`string`
+|`"cron(0 6 * * ? *)"`
+|no
+
+|[[input_runner_archive_file]] <<input_runner_archive_file,runner_archive_file>>
+|Archive file data object for runner
+|`any`
+|n/a
+|yes
+
+|[[input_subnets]] <<input_subnets,subnets>>
+|List of subnets, required field is: id
+|`list(any)`
+|n/a
+|yes
+
+|[[input_tags]] <<input_tags,tags>>
+|Tags
+|`map(map(string))`
+|n/a
+|yes
+
+|[[input_teams_activity_image]] <<input_teams_activity_image,teams_activity_image>>
+|Link to image for a card for MS Teams notification
+|`string`
+|`""`
+|no
+
+|[[input_teams_activity_subtitle]] <<input_teams_activity_subtitle,teams_activity_subtitle>>
+|Subtitle of a card for MS Teams notification
+|`string`
+|`""`
+|no
+
+|[[input_teams_activity_title]] <<input_teams_activity_title,teams_activity_title>>
+|Title of a card for MS Teams notification
+|`string`
+|`""`
+|no
+
+|[[input_teams_webhook_url]] <<input_teams_webhook_url,teams_webhook_url>>
+|Webhook url for MS Teams notification
+|`string`
+|`""`
+|no
+
+|[[input_unit_name]] <<input_unit_name,unit_name>>
+|n/a
+|`string`
+|n/a
+|yes
+
+|===
+
+== Outputs
+
+No outputs.
+<!-- END_TF_DOCS -->

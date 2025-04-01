@@ -1,0 +1,109 @@
+<!-- BEGIN_TF_DOCS -->
+== Requirements
+
+No requirements.
+
+== Providers
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Version
+|[[provider_archive]] <<provider_archive,archive>> |n/a
+|[[provider_aws]] <<provider_aws,aws>> |n/a
+|===
+
+== Modules
+
+No modules.
+
+== Resources
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Type
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group[aws_cloudwatch_log_group.runner] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecr_repository[aws_ecr_repository.runner] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster[aws_ecs_cluster.this] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition[aws_ecs_task_definition.runner] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_access_key[aws_iam_access_key.read_reports] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy[aws_iam_policy.allow_run_ecs_task] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy[aws_iam_policy.read_access_key_secret] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role[aws_iam_role.ecs_taks_role] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role[aws_iam_role.ecs_tasks_execution_role] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role[aws_iam_role.lambda] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.cloudwatch_for_lambda] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.ecs_for_lambda] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.ecs_tasks_execution_role] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.ecs_tasks_role_allow_athena_full_access] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.ecs_tasks_role_allow_s3_full_access] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment[aws_iam_role_policy_attachment.read_access_key_secret] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user[aws_iam_user.read_reports] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user_policy[aws_iam_user_policy.read_reports] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket[aws_s3_bucket.notebooks] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket[aws_s3_bucket.reports] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block[aws_s3_bucket_public_access_block.notebooks] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block[aws_s3_bucket_public_access_block.reports] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret[aws_secretsmanager_secret.read_reports] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version[aws_secretsmanager_secret_version.read_reports] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group[aws_security_group.runner] |resource
+|https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file[archive_file.runner_executor] |data source
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document[aws_iam_policy_document.ecs_tasks_assume_role] |data source
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document[aws_iam_policy_document.lambda_assume_role] |data source
+|===
+
+== Inputs
+
+[cols="a,a,a,a,a",options="header,autowidth"]
+|===
+|Name |Description |Type |Default |Required
+|[[input_aws_user_id]] <<input_aws_user_id,aws_user_id>>
+|AWS User id
+|`any`
+|n/a
+|yes
+
+|[[input_company_namespace]] <<input_company_namespace,company_namespace>>
+|Common prefix for company ex. plcf
+|`string`
+|n/a
+|yes
+
+|[[input_region]] <<input_region,region>>
+|AWS Region
+|`string`
+|`"eu-central-1"`
+|no
+
+|[[input_tags]] <<input_tags,tags>>
+|Tags
+|`map(map(string))`
+|n/a
+|yes
+
+|[[input_unit_name]] <<input_unit_name,unit_name>>
+|Describes the common name of the unit
+|`string`
+|n/a
+|yes
+
+|[[input_vpc]] <<input_vpc,vpc>>
+|VPC definition object, required field: id
+|`any`
+|n/a
+|yes
+
+|===
+
+== Outputs
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Description
+|[[output_ecr_runner_url]] <<output_ecr_runner_url,ecr_runner_url>> |n/a
+|[[output_ecs_cluster]] <<output_ecs_cluster,ecs_cluster>> |n/a
+|[[output_ecs_task_definition]] <<output_ecs_task_definition,ecs_task_definition>> |n/a
+|[[output_ecs_task_security_group]] <<output_ecs_task_security_group,ecs_task_security_group>> |n/a
+|[[output_iam_lambda_role]] <<output_iam_lambda_role,iam_lambda_role>> |n/a
+|[[output_runner_archive_file]] <<output_runner_archive_file,runner_archive_file>> |n/a
+|===
+<!-- END_TF_DOCS -->

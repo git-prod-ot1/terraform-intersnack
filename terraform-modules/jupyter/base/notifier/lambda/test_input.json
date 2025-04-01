@@ -1,0 +1,178 @@
+{
+  "version": "0",
+  "id": "398c072d-a2a1-0a83-62a0-9511b6c72a65",
+  "detail-type": "ECS Task State Change",
+  "source": "aws.ecs",
+  "account": "076565467175",
+  "time": "2024-04-11T15:16:31Z",
+  "region": "eu-central-1",
+  "resources": [
+    "arn:aws:ecs:eu-central-1:076565467175:task/dev_sw_reports/4ba829afac20406fa30a67043713c0a0"
+  ],
+  "detail": {
+    "attachments": [
+      {
+        "id": "150c9147-a433-452d-839f-96430bc86e65",
+        "type": "eni",
+        "status": "DELETED",
+        "details": [
+          {
+            "name": "subnetId",
+            "value": "subnet-0aa761e688c4f1c46"
+          },
+          {
+            "name": "networkInterfaceId",
+            "value": "eni-026e0ae9299ce0e71"
+          },
+          {
+            "name": "macAddress",
+            "value": "0a:55:d6:ad:6f:89"
+          },
+          {
+            "name": "privateDnsName",
+            "value": "ip-172-30-4-189.eu-central-1.compute.internal"
+          },
+          {
+            "name": "privateIPv4Address",
+            "value": "172.30.4.189"
+          }
+        ]
+      }
+    ],
+    "attributes": [
+      {
+        "name": "ecs.cpu-architecture",
+        "value": "x86_64"
+      }
+    ],
+    "availabilityZone": "eu-central-1c",
+    "clusterArn": "arn:aws:ecs:eu-central-1:076565467175:cluster/dev_sw_reports",
+    "connectivity": "CONNECTED",
+    "connectivityAt": "2024-04-11T15:15:12.139Z",
+    "containers": [
+      {
+        "containerArn": "arn:aws:ecs:eu-central-1:076565467175:container/dev_sw_reports/4ba829afac20406fa30a67043713c0a0/e1e857cb-5201-4cb3-b937-040e81735f46",
+        "exitCode": 254,
+        "lastStatus": "STOPPED",
+        "name": "runner",
+        "image": "076565467175.dkr.ecr.eu-central-1.amazonaws.com/dev_sw_reports_runner:latest",
+        "imageDigest": "sha256:548458a97fadab9b3e7b0be6bca0decfd3ea330cf0e34a5dc5249f352f0726ae",
+        "runtimeId": "4ba829afac20406fa30a67043713c0a0-1942098651",
+        "taskArn": "arn:aws:ecs:eu-central-1:076565467175:task/dev_sw_reports/4ba829afac20406fa30a67043713c0a0",
+        "networkInterfaces": [
+          {
+            "attachmentId": "150c9147-a433-452d-839f-96430bc86e65",
+            "privateIpv4Address": "172.30.4.189"
+          }
+        ],
+        "cpu": "1024",
+        "memoryReservation": "2048"
+      }
+    ],
+    "cpu": "1024",
+    "createdAt": "2024-04-11T15:15:08.338Z",
+    "desiredStatus": "STOPPED",
+    "enableExecuteCommand": "False",
+    "ephemeralStorage": {
+      "sizeInGiB": 20
+    },
+    "executionStoppedAt": "2024-04-11T15:16:07.387Z",
+    "group": "family:dev_sw_sweden00001",
+    "launchType": "FARGATE",
+    "lastStatus": "STOPPED",
+    "memory": "4096",
+    "overrides": {
+      "containerOverrides": [
+        {
+          "environment": [
+            {
+              "name": "NOTEBOOK_NAME",
+              "value": "snapshots_report_daily123.ipynb"
+            },
+            {
+              "name": "PROCESS_START",
+              "value": "2024-04-11T15:15:07.583Z"
+            },
+            {
+              "name": "FACTORY",
+              "value": "sweden00001"
+            },
+            {
+              "name": "REPORT_NAME",
+              "value": "snapshots_report_daily123.ipynb/sweden00001_snapshots_report_daily123.ipynb_2024-04-11T15:15:07.583Z.pdf"
+            },
+            {
+              "name": "REPORT_EXT",
+              "value": "pdf"
+            },
+            {
+              "name": "ACTIVITY_TITLE",
+              "value": ""
+            },
+            {
+              "name": "TEAMS_WEBHOOK_URL",
+              "value": ""
+            },
+            {
+              "name": "TEAMS_ACTIVITY_TITLE",
+              "value": ""
+            },
+            {
+              "name": "TEAMS_ACTIVITY_SUBTITLE",
+              "value": ""
+            },
+            {
+              "name": "TEAMS_ACTIVITY_IMAGE",
+              "value": ""
+            },
+            {
+              "name": "LAILO_WEBHOOK_URL",
+              "value": ""
+            },
+            {
+              "name": "LAILO_ACTIVITY_TITLE",
+              "value": ""
+            },
+            {
+              "name": "TELEGRAM_BOT_TOKEN",
+              "value": ""
+            },
+            {
+              "name": "TELEGRAM_CHAT_ID",
+              "value": ""
+            },
+            {
+              "name": "TELEGRAM_ACTIVITY_TITLE",
+              "value": ""
+            },
+            {
+              "name": "ATHENA_QUERY_RESULTS_BUCKET",
+              "value": "s3://dev-sw-athena-tests"
+            },
+            {
+              "name": "TABLE_FARMER_MEASUREMENT_SAMPLESDATA",
+              "value": "farmer_measurement_samplesdata"
+            },
+            {
+              "name": "DATABASE",
+              "value": "dev_sw_measurement_samples_database"
+            }
+          ],
+          "name": "runner"
+        }
+      ]
+    },
+    "platformVersion": "1.4.0",
+    "pullStartedAt": "2024-04-11T15:15:24.457Z",
+    "pullStoppedAt": "2024-04-11T15:15:50.457Z",
+    "startedAt": "2024-04-11T15:16:06.315Z",
+    "stoppingAt": "2024-04-11T15:16:17.43Z",
+    "stoppedAt": "2024-04-11T15:16:31.48Z",
+    "stoppedReason": "Essential container in task exited",
+    "stopCode": "EssentialContainerExited",
+    "taskArn": "arn:aws:ecs:eu-central-1:076565467175:task/dev_sw_reports/4ba829afac20406fa30a67043713c0a0",
+    "taskDefinitionArn": "arn:aws:ecs:eu-central-1:076565467175:task-definition/dev_sw_sweden00001:1",
+    "updatedAt": "2024-04-11T15:16:31.48Z",
+    "version": 5
+  }
+}

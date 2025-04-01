@@ -1,0 +1,179 @@
+<!-- BEGIN_TF_DOCS -->
+== Requirements
+
+No requirements.
+
+== Providers
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Version
+|[[provider_archive]] <<provider_archive,archive>> |n/a
+|[[provider_aws]] <<provider_aws,aws>> |n/a
+|===
+
+== Modules
+
+[cols="a,a,a",options="header,autowidth"]
+|===
+|Name |Source |Version
+|[[module_iot2s3]] <<module_iot2s3,iot2s3>> |../iot2s3 |
+|===
+
+== Resources
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Type
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_dashboard[aws_cloudwatch_dashboard.metrics_dashboard] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_rule[aws_cloudwatch_event_rule.save_video_to_s3] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target[aws_cloudwatch_event_target.lambda_video_to_s3] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group[aws_cloudwatch_log_group.firehose_configuration_delivery_stream] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group[aws_cloudwatch_log_group.firehose_video_index_delivery_stream] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group[aws_cloudwatch_log_group.save_video_to_s3_lambda_log_group] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_stream[aws_cloudwatch_log_stream.firehose_configuration_delivery_stream_s3] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_stream[aws_cloudwatch_log_stream.firehose_video_index_delivery_stream_s3] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_metric_alarm[aws_cloudwatch_metric_alarm.stream_down] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_policy[aws_iot_policy.configuration] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_policy_attachment[aws_iot_policy_attachment.configuration_policy_attachment] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iot_topic_rule[aws_iot_topic_rule.config_rule] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream[aws_kinesis_firehose_delivery_stream.configuration] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream[aws_kinesis_firehose_delivery_stream.video_index] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_stream[aws_kinesis_stream.configuration] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_stream[aws_kinesis_stream.video_index] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_function[aws_lambda_function.save_video_to_s3] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission[aws_lambda_permission.lambda_permissions] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic[aws_sns_topic.factory] |resource
+|https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription[aws_sns_topic_subscription.this] |resource
+|https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file[archive_file.save_video_to_s3_zip] |data source
+|===
+
+== Inputs
+
+[cols="a,a,a,a,a",options="header,autowidth"]
+|===
+|Name |Description |Type |Default |Required
+|[[input_aws_user_id]] <<input_aws_user_id,aws_user_id>>
+|AWS User id
+|`any`
+|n/a
+|yes
+
+|[[input_base]] <<input_base,base>>
+|n/a
+|
+
+[source]
+----
+object({
+    measurement_samples_bucket                   = any
+    measurement_samples_glue_catalog_database    = any
+    transform_edge_config_lambda                 = any
+    transform_edge_message_without_config_lambda = any
+    aws_iam_lambda_role                          = any
+    s3_video_feed_name                           = string
+    pliot_arn                                    = any
+    litmus_name                                  = any
+    logs_retention_time                          = number
+  })
+----
+
+|n/a
+|yes
+
+|[[input_company_namespace]] <<input_company_namespace,company_namespace>>
+|Common prefix for company ex. plcf
+|`string`
+|n/a
+|yes
+
+|[[input_data_stream_shards]] <<input_data_stream_shards,data_stream_shards>>
+|Number of data shards for Kinesis
+|`number`
+|`1`
+|no
+
+|[[input_factory_short]] <<input_factory_short,factory_short>>
+|Short name of the factory, ex. gl for glinojeck
+|`string`
+|n/a
+|yes
+
+|[[input_layers]] <<input_layers,layers>>
+|Object holding info about globally accessible layers
+|`any`
+|n/a
+|yes
+
+|[[input_measurement_samples_bucket]] <<input_measurement_samples_bucket,measurement_samples_bucket>>
+|If provided, overrides the creation of dedicated bucket for measurement samples
+|`any`
+|`null`
+|no
+
+|[[input_measurement_samples_glue_catalog_database]] <<input_measurement_samples_glue_catalog_database,measurement_samples_glue_catalog_database>>
+|Glue Catalog Database for measurement samples table
+|`any`
+|n/a
+|yes
+
+|[[input_measurement_samples_glue_table]] <<input_measurement_samples_glue_table,measurement_samples_glue_table>>
+|If provided, overrides the creation of dedicated glue table
+|`any`
+|`null`
+|no
+
+|[[input_no_of_things]] <<input_no_of_things,no_of_things>>
+|Number of things to create
+|`number`
+|`1`
+|no
+
+|[[input_region]] <<input_region,region>>
+|AWS Region
+|`string`
+|`"eu-central-1"`
+|no
+
+|[[input_sns_alarms_recipients]] <<input_sns_alarms_recipients,sns_alarms_recipients>>
+|List of emails, that should be notified on events
+|`list(string)`
+|`[]`
+|no
+
+|[[input_tags]] <<input_tags,tags>>
+|Tags
+|`map(map(string))`
+|n/a
+|yes
+
+|[[input_transformation_lambda]] <<input_transformation_lambda,transformation_lambda>>
+|Lambda resource used for transforming incoming data in Kinesis Firehose
+|`any`
+|n/a
+|yes
+
+|[[input_unit_name]] <<input_unit_name,unit_name>>
+|Describes the common name of the unit
+|`string`
+|n/a
+|yes
+
+|[[input_video_stream_count]] <<input_video_stream_count,video_stream_count>>
+|Number of Video streams. Used for creation of alarms
+|`number`
+|`1`
+|no
+
+|===
+
+== Outputs
+
+[cols="a,a",options="header,autowidth"]
+|===
+|Name |Description
+|[[output_aws_iot_data_topic]] <<output_aws_iot_data_topic,aws_iot_data_topic>> |n/a
+|[[output_module_name]] <<output_module_name,module_name>> |n/a
+|[[output_outputs]] <<output_outputs,outputs>> |n/a
+|===
+<!-- END_TF_DOCS -->

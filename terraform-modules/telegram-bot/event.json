@@ -1,0 +1,38 @@
+{
+  "version": "2.0",
+  "routeKey": "$default",
+  "rawPath": "/",
+  "rawQueryString": "",
+  "headers": {
+    "content-length": "1077",
+    "x-amzn-tls-cipher-suite": "ECDHE-RSA-AES128-GCM-SHA256",
+    "x-amzn-tls-version": "TLSv1.2",
+    "x-amzn-trace-id": "Root=1-637e821a-1ca5d65a2c9cbea632f8f008",
+    "x-forwarded-proto": "https",
+    "host": "dneyowpozsubznhfusoqmaizda0xiosw.lambda-url.eu-central-1.on.aws",
+    "x-forwarded-port": "443",
+    "content-type": "application/json",
+    "x-forwarded-for": "91.108.6.143",
+    "accept-encoding": "gzip, deflate"
+  },
+  "requestContext": {
+    "accountId": "anonymous",
+    "apiId": "dneyowpozsubznhfusoqmaizda0xiosw",
+    "domainName": "dneyowpozsubznhfusoqmaizda0xiosw.lambda-url.eu-central-1.on.aws",
+    "domainPrefix": "dneyowpozsubznhfusoqmaizda0xiosw",
+    "http": {
+      "method": "POST",
+      "path": "/",
+      "protocol": "HTTP/1.1",
+      "sourceIp": "91.108.6.143",
+      "userAgent": "None"
+    },
+    "requestId": "211b06b2-7f77-45c8-bfcf-5d226166373a",
+    "routeKey": "$default",
+    "stage": "$default",
+    "time": "23/Nov/2022:20:27:06 +0000",
+    "timeEpoch": 1669235226450
+  },
+  "body": "{\"update_id\":706183786,\n\"callback_query\":{\"id\":\"4811289242416820760\",\"from\":{\"id\":5415182867,\"is_bot\":false,\"first_name\":\"J\\u0119drzej\",\"last_name\":\"Frankowski\",\"username\":\"jedfrankowski\",\"language_code\":\"pl\"},\"message\":{\"message_id\":347,\"from\":{\"id\":5755885376,\"is_bot\":true,\"first_name\":\"DEV_REPORTS_BOT\",\"username\":\"dev_reports_sweden00001_bot\"},\"chat\":{\"id\":-767701360,\"title\":\"Sweden00001\",\"type\":\"group\",\"all_members_are_administrators\":true},\"date\":1669233009,\"text\":\"Here's the list of available reports:\",\"reply_markup\":{\"inline_keyboard\":[[{\"text\":\"Plant report\",\"callback_data\":\"plantid\"}],[{\"text\":\"Marketing harvest prediction report\",\"callback_data\":\"marketing_harvesting\"}],[{\"text\":\"Container events report\",\"callback_data\":\"container_events\"}],[{\"text\":\"Seedling report\",\"callback_data\":\"seedling_report\"}],[{\"text\":\"Panels report\",\"callback_data\":\"panel_summary\"}],[{\"text\":\"Sales report\",\"callback_data\":\"sales_report\"}],[{\"text\":\"Harvest prediction report\",\"callback_data\":\"harvesting\"}]]}},\"chat_instance\":\"-4737063589434805230\",\"data\":\"container_events\"}}",
+  "isBase64Encoded": false
+}

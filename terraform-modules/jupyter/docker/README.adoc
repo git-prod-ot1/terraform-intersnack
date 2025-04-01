@@ -1,0 +1,18 @@
+== Purpose
+This docker image contains base jupyter related python dependencies and scripts for processing reports. Image is used as a base for Fargate Task created dynamically with Lambda function
+
+== Files
+
+* requirements.txt - contains required dependencies, IMPORTANT: notice how opencv version is headless. This is due the fact that fargate task does not support GUI. If new dependencies are added, make sure to test them in fargate docker. Headless options are preferred
+* fetch-notebook.sh - fetches jupyter notebook based on `NOTEBOOK_NAME` and `NOTEBOOKS_S3_BUCKET` env variables and saves locally as `notebook.ipynb` file
+* publish-result.py - publishes output from notebook execution (report.${REPORT_EXT}) to s3 bucket based on `TARGET_S3_BUCKET` and `REPORT_NAME` env variables
+* notify.py - optional step for sending a presigned link for report to configured MS Teams channel based on env variables: `TARGET_S3_BUCKET`, `TEAMS_WEBHOOK_URL`, `REPORT_NAME`, `TEAMS_ACTIVITY_TITLE`, `TEAMS_ACTIVITY_SUBTITLE`, `TEAMS_ACTIVITY_IMAGE`
+* script.sh - main script to execute all steps.
+
+== Build
+Image is currently saved in ECR created from `reports/base` module. In case of any changes, manual rebuild and publish is required. Name of the image at the time of writing this document (needed for properly tagging the image) is: `{aws_account_id}.dkr.ecr.eu-central-1.amazonaws.com/dev_sw_reports_runner`.
+
+DISCLAIMER: to connect to ECR, one must first login using a command:
+`aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin {aws_account_id}.dkr.ecr.eu-central-1.amazonaws.com`
+
+Region might differ
